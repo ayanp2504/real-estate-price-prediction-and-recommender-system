@@ -1,0 +1,13 @@
+schema: '2.0'
+stages:
+  data-preprocessing-flats:
+    cmd: python .\src\data\data-preprocessing-flats.py .\data\raw\flats.csv
+    deps:
+    - path: .\data\raw\flats.csv
+      hash: md5
+      md5: 5b4e0ed65c25b51c23850cd035f02ff9
+      size: 5724107
+    - path: .\src\data\data-preprocessing-flats.py
+      hash: md5
+      md5: c43bbbb44e5619d3d6eb9d952b201bbc
+      size: 3347

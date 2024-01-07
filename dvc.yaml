@@ -1,0 +1,6 @@
+stages:
+  data-preprocessing-flats:
+    cmd: python .\src\data\data-preprocessing-flats.py .\data\raw\flats.csv
+    deps:
+    - .\src\data\data-preprocessing-flats.py
+    - .\data\raw\flats.csv
