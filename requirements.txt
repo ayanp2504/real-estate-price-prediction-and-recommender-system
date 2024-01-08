@@ -1,5 +1,5 @@
 pandas
-numpy
+numpy==1.23.2
 scikit-learn==1.0.2
 dvc==3.37.0
 dvc-data==3.5.1
@@ -9,3 +9,6 @@ dvc-render==1.0.0
 dvc-studio-client==0.18.0
 dvc-task==0.3.0
 dvclive==3.5.1
+pathspec==0.12.1
+shap==0.44.0
+sklearn==0.0.post11
