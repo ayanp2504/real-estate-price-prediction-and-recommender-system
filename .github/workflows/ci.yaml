@@ -3,7 +3,7 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - main  # Adjust this to your main branch name if it's different
+      - master  # Adjust this to your main branch name if it's different
 
 jobs:
   Build:
