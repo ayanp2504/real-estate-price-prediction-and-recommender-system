@@ -127,7 +127,7 @@ def main():
 
     all_nan_df['built_up_area'] = all_nan_df.apply(convert_scale,axis=1)
 
-    save_data(df, output_path)
+
 
     # update the original dataframe
     df.update(all_nan_df)
@@ -326,6 +326,9 @@ def main():
     luxury_score = features_binary_df[list(weights.keys())].multiply(list(weights.values())).sum(axis=1)
 
     df['luxury_score'] = luxury_score
+
+    # cols to drop -> nearbyLocations,furnishDetails, features,features_list, additionalRoom
+    df.drop(columns=['nearbyLocations','furnishDetails','features','features_list','additionalRoom'],inplace=True)
 
     save_data(df, output_path)
 

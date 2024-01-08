@@ -63,15 +63,15 @@ stages:
       size: 272474
     - path: .\src\features\feature-engineering.py
       hash: md5
-      md5: 2158a6d20df6d611f1038a1cfbc002de
-      size: 12135
+      md5: 2c646f39acb3daea61e52b3f01961e55
+      size: 12317
   outlier-treatment:
     cmd: python .\src\features\outlier-treatment.py .\data\processed\gurgaon_properties_cleaned_v2.csv
     deps:
     - path: .\data\processed\gurgaon_properties_cleaned_v2.csv
       hash: md5
-      md5: 6dd9f89a692ef9506fd20a3094d457c6
-      size: 4986489
+      md5: 43ae3f3281a66d0a62503b2a73747699
+      size: 630227
     - path: .\src\features\outlier-treatment.py
       hash: md5
       md5: 543c56089c6d05ec472b821264549baf
@@ -81,9 +81,20 @@ stages:
     deps:
     - path: .\data\processed\gurgaon_properties_outlier_treated.csv
       hash: md5
-      md5: 8640c69c076ec0e8b495bae460ef864e
-      size: 4941276
+      md5: 67c04f30d2d9a566fda030135813afcd
+      size: 718181
     - path: .\src\features\missing-value-imputation.py
       hash: md5
       md5: 705fe2a8d68653cfd70282bf36792cc3
       size: 4332
+  feature-selection:
+    cmd: python .\src\features\feature-selection.py .\data\processed\gurgaon_properties_missing_value_imputation.csv
+    deps:
+    - path: .\data\processed\gurgaon_properties_missing_value_imputation.csv
+      hash: md5
+      md5: 9acacd783bee9644373e2fc0410c96b0
+      size: 415454
+    - path: .\src\features\feature-selection.py
+      hash: md5
+      md5: 821f2b49fed8280dac5581b9d5b8eff3
+      size: 7763
