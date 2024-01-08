@@ -37,4 +37,10 @@ stages:
     - .\src\features\outlier-treatment.py
     - .\data\processed\gurgaon_properties_cleaned_v2.csv
 
+  missing_value_imputation:
+    cmd: python .\src\features\missing-value-imputation.py .\data\processed\gurgaon_properties_outlier_treated.csv
+    deps:
+    - .\src\features\missing-value-imputation.py
+    - .\data\processed\gurgaon_properties_outlier_treated.csv
+
 

@@ -77,6 +77,7 @@ def main():
 
 
     df['price_per_sqft'] = round((df['price']*10000000)/df['area'])
+    df['area_room_ratio'] = df['area']/df['bedRoom']
     
     save_data(df, output_path)
 
