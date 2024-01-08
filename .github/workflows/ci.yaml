@@ -6,7 +6,7 @@ on:
       - main  # Adjust this to your main branch name if it's different
 
 jobs:
-  integration:
+  Build:
     name: Continuous Integration
     runs-on: ubuntu-latest
 
