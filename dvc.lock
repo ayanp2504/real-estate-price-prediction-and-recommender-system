@@ -49,3 +49,19 @@ stages:
       hash: md5
       md5: 78e6e5f055a330b0fedd45dd8798c742
       size: 7172
+  feature-engineering:
+    cmd: python .\src\features\feature-engineering.py .\data\processed\gurgaon_properties_cleaned_v1.csv
+      .\data\raw\appartments.csv
+    deps:
+    - path: .\data\processed\gurgaon_properties_cleaned_v1.csv
+      hash: md5
+      md5: 149cdd28cbebe81a1172a4110d19a169
+      size: 3845515
+    - path: .\data\raw\appartments.csv
+      hash: md5
+      md5: 0973dd4bd85442c26003fb77c63f3544
+      size: 272474
+    - path: .\src\features\feature-engineering.py
+      hash: md5
+      md5: 2158a6d20df6d611f1038a1cfbc002de
+      size: 12135

@@ -24,3 +24,10 @@ stages:
     - .\src\data\data-preprocessing-level-2.py
     - .\data\processed\gurgaon_properties.csv
 
+  feature-engineering:
+    cmd: python .\src\features\feature-engineering.py .\data\processed\gurgaon_properties_cleaned_v1.csv .\data\raw\appartments.csv
+    deps:
+    - .\src\features\feature-engineering.py
+    - .\data\processed\gurgaon_properties_cleaned_v1.csv
+    - .\data\raw\appartments.csv
+
