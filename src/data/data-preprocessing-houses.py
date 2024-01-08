@@ -1,4 +1,4 @@
-# data-preprocessing-flats.py
+# data-preprocessing-houses.py
 import pathlib
 import sys
 import pandas as pd
@@ -8,20 +8,22 @@ import re
 def load_data(data_path):
     # Load your dataset from a given path
     df = pd.read_csv(data_path)
+    print(df.head())
     return df
 
 def save_data(data, output_path):
     # Save the split datasets to the specified output path
     pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
-    data.to_csv(output_path + '/flats_cleaned.csv', index=False)
-
-def drop_and_rename_cols(df):
-    df.drop(columns=['link','property_id'], inplace=True)
-    df.rename(columns={'area':'price_per_sqft'},inplace=True)
-    return df
+    data.to_csv(output_path + '/house_cleaned.csv', index=False)
 
 def clean_society_col(df):
     df['society'] = df['society'].apply(lambda name: re.sub(r'\d+(\.\d+)?\s?★', '', str(name)).strip()).str.lower()
+    df['society'] = df['society'].str.replace('nan','independent')
+    return df
+
+def drop_and_rename_cols(df):
+    df.drop(columns=['link','property_id'], inplace=True)
+    df.rename(columns={'rate':'price_per_sqft'},inplace=True)
     return df
 
 def process_price_column(df):
@@ -42,6 +44,7 @@ def process_price_column(df):
 
 def clean_price_per_sqft_col(df):
     df['price_per_sqft'] = df['price_per_sqft'].str.split('/').str.get(0).str.replace('₹','').str.replace(',','').str.strip().astype('float')
+
     return df
 
 def treat_bedroom_col(df):
@@ -62,18 +65,18 @@ def treat_additional_room_col(df):
     df['additionalRoom'] = df['additionalRoom'].str.lower()
     return df
 
-def treat_floorNum_col(df):
-    df['floorNum'] = df['floorNum'].str.split(' ').str.get(0).replace('Ground','0').str.replace('Basement','-1').str.replace('Lower','0').str.extract(r'(\d+)')
+def treat_noOfFloor_col(df):
+    df['noOfFloor'] = df['noOfFloor'].str.split(' ').str.get(0)
+    df.rename(columns={'noOfFloor':'floorNum'},inplace=True)
     return df
 
 def treat_facing_col(df):
     df['facing'].fillna('NA',inplace=True)
     return df
 
-def calculate_area_and_insert_col(df):
-    df.insert(loc=4,column='area',value=round((df['price']*10000000)/df['price_per_sqft']))
+def calculate_area(df):
+    df['area'] = round((df['price']*10000000)/df['price_per_sqft'])
     return df
-
 
 def main():
 
@@ -85,6 +88,7 @@ def main():
     output_path = home_dir.as_posix() + '/data/processed'
     
     data = load_data(data_path)
+    data = data.drop_duplicates()
     data = drop_and_rename_cols(data)
     data = clean_society_col(data)
     data = process_price_column(data)
@@ -93,11 +97,10 @@ def main():
     data = treat_bathroom_col(data)
     data = treat_balcony_col(data)
     data = treat_additional_room_col(data)
-    data = treat_floorNum_col(data)
+    data = treat_noOfFloor_col(data)
     data = treat_facing_col(data)
-    data = calculate_area_and_insert_col(data)
-
-    data.insert(loc=1,column='property_type',value='flat')
+    data = calculate_area(data)
+    data.insert(loc=1,column='property_type',value='house')
     save_data(data, output_path)
 
 if __name__ == "__main__":

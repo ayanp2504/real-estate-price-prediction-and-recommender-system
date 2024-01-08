@@ -4,3 +4,9 @@ stages:
     deps:
     - .\src\data\data-preprocessing-flats.py
     - .\data\raw\flats.csv
+
+  data-preprocessing-houses:
+    cmd: python .\src\data\data-preprocessing-houses.py .\data\raw\houses.csv
+    deps:
+    - .\src\data\data-preprocessing-houses.py
+    - .\data\raw\houses.csv
