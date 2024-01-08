@@ -65,3 +65,14 @@ stages:
       hash: md5
       md5: 2158a6d20df6d611f1038a1cfbc002de
       size: 12135
+  outlier-treatment:
+    cmd: python .\src\features\outlier-treatment.py .\data\processed\gurgaon_properties_cleaned_v2.csv
+    deps:
+    - path: .\data\processed\gurgaon_properties_cleaned_v2.csv
+      hash: md5
+      md5: 6dd9f89a692ef9506fd20a3094d457c6
+      size: 4986489
+    - path: .\src\features\outlier-treatment.py
+      hash: md5
+      md5: 52f34fcc116428d1938811f4c0fdef08
+      size: 2630
