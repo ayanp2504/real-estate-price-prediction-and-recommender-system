@@ -22,3 +22,19 @@ stages:
       hash: md5
       md5: 674e5105b859e573c5de810f78e03ded
       size: 3322
+  merge-flats-and-houses:
+    cmd: python .\src\data\merge-flats-and-houses.py .\data\processed\flats_cleaned.csv
+      .\data\processed\house_cleaned.csv
+    deps:
+    - path: .\data\processed\flats_cleaned.csv
+      hash: md5
+      md5: 7fafddf7f160febbc67110cc0e66dd85
+      size: 5152858
+    - path: .\data\processed\house_cleaned.csv
+      hash: md5
+      md5: a7092f65c8c6f2aaa0c4ae88189ffc90
+      size: 1669348
+    - path: .\src\data\merge-flats-and-houses.py
+      hash: md5
+      md5: 24213ef7a93bc619a3bc33a120711d46
+      size: 1111

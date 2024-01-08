@@ -10,3 +10,10 @@ stages:
     deps:
     - .\src\data\data-preprocessing-houses.py
     - .\data\raw\houses.csv
+
+  merge-flats-and-houses:
+    cmd: python .\src\data\merge-flats-and-houses.py .\data\processed\flats_cleaned.csv .\data\processed\house_cleaned.csv
+    deps:
+    - .\src\data\merge-flats-and-houses.py
+    - .\data\processed\flats_cleaned.csv
+    - .\data\processed\house_cleaned.csv
