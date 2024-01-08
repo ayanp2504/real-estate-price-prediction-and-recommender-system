@@ -38,3 +38,14 @@ stages:
       hash: md5
       md5: 24213ef7a93bc619a3bc33a120711d46
       size: 1111
+  data-preprocessing-level-2:
+    cmd: python .\src\data\data-preprocessing-level-2.py .\data\processed\gurgaon_properties.csv
+    deps:
+    - path: .\data\processed\gurgaon_properties.csv
+      hash: md5
+      md5: dc3a0887d38492e4c3e01645d5c54666
+      size: 6827515
+    - path: .\src\data\data-preprocessing-level-2.py
+      hash: md5
+      md5: 78e6e5f055a330b0fedd45dd8798c742
+      size: 7172

@@ -17,3 +17,10 @@ stages:
     - .\src\data\merge-flats-and-houses.py
     - .\data\processed\flats_cleaned.csv
     - .\data\processed\house_cleaned.csv
+
+  data-preprocessing-level-2:
+    cmd: python .\src\data\data-preprocessing-level-2.py .\data\processed\gurgaon_properties.csv
+    deps:
+    - .\src\data\data-preprocessing-level-2.py
+    - .\data\processed\gurgaon_properties.csv
+
