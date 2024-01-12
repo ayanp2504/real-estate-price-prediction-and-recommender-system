@@ -55,7 +55,7 @@ def main():
     # input_file = '.\data\processed\gurgaon_properties_missing_value_imputation.csv'
     data_path = home_dir.as_posix() + input_file
     output_path = home_dir.as_posix() + '/data/processed'
-    print("Reached")
+
     
     train_df = load_data(data_path)
 
@@ -70,10 +70,11 @@ def main():
 
     # Drop columns after extracting features
     train_df.drop(columns=['floorNum','luxury_score'],inplace=True)
+    
 
     # Create a copy of the original data for label encoding
     data_label_encoded = train_df.copy()
-
+    
     categorical_cols = train_df.select_dtypes(include=['object']).columns
 
     # Apply label encoding to categorical columns
@@ -208,7 +209,7 @@ def main():
     # Features ['pooja room', 'study room', 'others'] scored the least so removing these features.
     export_df = X_label.drop(columns=['pooja room', 'study room', 'others'])
     export_df['price'] = y_label
-
+    print(export_df.head())
     save_data(export_df, output_path)
 
 
