@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/real-estate-price-prediction-and-recommender-system/mlruns/985873474832316789/788c656bf48d4977a5f6f4ce9bb4763d/artifacts
+end_time: 1705079382913
+entry_point_name: ''
+experiment_id: '985873474832316789'
+lifecycle_stage: active
+run_id: 788c656bf48d4977a5f6f4ce9bb4763d
+run_name: learned-donkey-30
+run_uuid: 788c656bf48d4977a5f6f4ce9bb4763d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705079382872
+status: 3
+tags: []
+user_id: ayanp

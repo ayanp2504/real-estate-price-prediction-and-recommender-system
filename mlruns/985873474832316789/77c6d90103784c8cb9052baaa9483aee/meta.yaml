@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/real-estate-price-prediction-and-recommender-system/mlruns/985873474832316789/77c6d90103784c8cb9052baaa9483aee/artifacts
+deleted_time: 1705079372781
+end_time: 1705079167707
+entry_point_name: ''
+experiment_id: '985873474832316789'
+lifecycle_stage: deleted
+run_id: 77c6d90103784c8cb9052baaa9483aee
+run_name: gregarious-bat-743
+run_uuid: 77c6d90103784c8cb9052baaa9483aee
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705079167678
+status: 4
+tags: []
+user_id: ayanp

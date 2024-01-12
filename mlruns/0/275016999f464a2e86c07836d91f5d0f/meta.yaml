@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/0/275016999f464a2e86c07836d91f5d0f/artifacts
+deleted_time: 1705078138580
+end_time: 1705077858463
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 275016999f464a2e86c07836d91f5d0f
+run_name: rogue-mink-542
+run_uuid: 275016999f464a2e86c07836d91f5d0f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705077621542
+status: 3
+tags: []
+user_id: ayanp

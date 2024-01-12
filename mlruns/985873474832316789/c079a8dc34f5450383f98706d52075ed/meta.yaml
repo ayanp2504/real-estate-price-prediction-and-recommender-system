@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/real-estate-price-prediction-and-recommender-system/mlruns/985873474832316789/c079a8dc34f5450383f98706d52075ed/artifacts
+deleted_time: 1705078782171
+end_time: 1705078461347
+entry_point_name: ''
+experiment_id: '985873474832316789'
+lifecycle_stage: deleted
+run_id: c079a8dc34f5450383f98706d52075ed
+run_name: bald-mole-244
+run_uuid: c079a8dc34f5450383f98706d52075ed
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705078461297
+status: 4
+tags: []
+user_id: ayanp

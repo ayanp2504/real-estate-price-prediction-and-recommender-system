@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/0/fa4dbb0705c54e09810cba0904e28967/artifacts
+deleted_time: 1705077334032
+end_time: 1705075309178
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: fa4dbb0705c54e09810cba0904e28967
+run_name: unequaled-bear-871
+run_uuid: fa4dbb0705c54e09810cba0904e28967
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705075114849
+status: 3
+tags: []
+user_id: ayanp

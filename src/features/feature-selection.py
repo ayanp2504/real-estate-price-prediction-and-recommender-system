@@ -3,6 +3,9 @@ import sys
 import pandas as pd
 import numpy as np
 import shap
+import json
+import mlflow
+import mlflow.sklearn
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
@@ -49,8 +52,10 @@ def main():
     home_dir = curr_dir.parent.parent.parent
 
     input_file = sys.argv[1]
+    # input_file = '.\data\processed\gurgaon_properties_missing_value_imputation.csv'
     data_path = home_dir.as_posix() + input_file
     output_path = home_dir.as_posix() + '/data/processed'
+    print("Reached")
     
     train_df = load_data(data_path)
 
@@ -84,6 +89,7 @@ def main():
 
     # Technique 1 - Correlation Analysis
     fi_df1 = data_label_encoded.corr()['price'].iloc[1:].to_frame().reset_index().rename(columns={'index':'feature','price':'corr_coeff'})
+    
 
     # Technique 2 - Random Forest Feature Importance
     # Train a Random Forest regressor on label encoded data
@@ -189,10 +195,14 @@ def main():
         'SHAP_score': np.abs(shap_values).mean(axis=0)
     }).sort_values(by='SHAP_score', ascending=False)
 
+    
+    # Merging all scores
     final_fi_df = fi_df1.merge(fi_df2,on='feature').merge(fi_df3,on='feature').merge(fi_df4,on='feature').merge(fi_df5,on='feature').merge(fi_df6,on='feature').merge(fi_df7,on='feature').merge(fi_df8,on='feature').set_index('feature')
 
     # normalize the score
     final_fi_df = final_fi_df.divide(final_fi_df.sum(axis=0), axis=1)
+
+    
 
 
     # Features ['pooja room', 'study room', 'others'] scored the least so removing these features.

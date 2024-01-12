@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/0/2ff63573b7ab4cc2a68e2bdcccb547b8/artifacts
+deleted_time: 1705077334033
+end_time: 1705075539929
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 2ff63573b7ab4cc2a68e2bdcccb547b8
+run_name: mercurial-stoat-302
+run_uuid: 2ff63573b7ab4cc2a68e2bdcccb547b8
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705075358183
+status: 3
+tags: []
+user_id: ayanp

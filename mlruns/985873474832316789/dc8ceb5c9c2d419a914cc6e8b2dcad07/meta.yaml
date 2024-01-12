@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/real-estate-price-prediction-and-recommender-system/mlruns/985873474832316789/dc8ceb5c9c2d419a914cc6e8b2dcad07/artifacts
+deleted_time: 1705078782170
+end_time: 1705078698774
+entry_point_name: ''
+experiment_id: '985873474832316789'
+lifecycle_stage: deleted
+run_id: dc8ceb5c9c2d419a914cc6e8b2dcad07
+run_name: unruly-stag-172
+run_uuid: dc8ceb5c9c2d419a914cc6e8b2dcad07
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705078698732
+status: 4
+tags: []
+user_id: ayanp
