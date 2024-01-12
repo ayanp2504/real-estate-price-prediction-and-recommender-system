@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/real-estate-price-prediction-and-recommender-system/mlruns/985873474832316789/29bd8a3dd2aa42ea946a013c6357371b/artifacts
+deleted_time: 1705078782170
+end_time: 1705078668083
+entry_point_name: ''
+experiment_id: '985873474832316789'
+lifecycle_stage: deleted
+run_id: 29bd8a3dd2aa42ea946a013c6357371b
+run_name: amusing-midge-757
+run_uuid: 29bd8a3dd2aa42ea946a013c6357371b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705078668036
+status: 4
+tags: []
+user_id: ayanp

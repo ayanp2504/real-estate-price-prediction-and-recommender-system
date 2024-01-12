@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/real-estate-price-prediction-and-recommender-system/mlruns/985873474832316789/1c98f3723f4840429af165093d049467/artifacts
+end_time: 1705079211593
+entry_point_name: ''
+experiment_id: '985873474832316789'
+lifecycle_stage: active
+run_id: 1c98f3723f4840429af165093d049467
+run_name: charming-hawk-324
+run_uuid: 1c98f3723f4840429af165093d049467
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705079211549
+status: 3
+tags: []
+user_id: ayanp

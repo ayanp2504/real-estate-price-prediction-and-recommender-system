@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/0/6ee68f69f79640e6bdd4d100d410d449/artifacts
+deleted_time: 1705077334032
+end_time: 1705076416865
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 6ee68f69f79640e6bdd4d100d410d449
+run_name: honorable-shad-181
+run_uuid: 6ee68f69f79640e6bdd4d100d410d449
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705076115864
+status: 3
+tags: []
+user_id: ayanp

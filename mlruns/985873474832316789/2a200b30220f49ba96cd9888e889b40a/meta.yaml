@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/real-estate-price-prediction-and-recommender-system/mlruns/985873474832316789/2a200b30220f49ba96cd9888e889b40a/artifacts
+deleted_time: 1705079372785
+end_time: 1705079151903
+entry_point_name: ''
+experiment_id: '985873474832316789'
+lifecycle_stage: deleted
+run_id: 2a200b30220f49ba96cd9888e889b40a
+run_name: smiling-hawk-546
+run_uuid: 2a200b30220f49ba96cd9888e889b40a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705079151871
+status: 4
+tags: []
+user_id: ayanp
