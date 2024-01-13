@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/0/2de04bd4ee9e452199f64808e277e6ab/artifacts
+deleted_time: 1705123597567
+end_time: 1705123531754
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 2de04bd4ee9e452199f64808e277e6ab
+run_name: defiant-moose-642
+run_uuid: 2de04bd4ee9e452199f64808e277e6ab
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705123528138
+status: 4
+tags: []
+user_id: ayanp

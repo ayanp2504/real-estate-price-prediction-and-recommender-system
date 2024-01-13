@@ -51,7 +51,12 @@ stages:
 
   make_dataset:
     cmd: python .\src\data\make_dataset.py .\data\processed\gurgaon_properties_post_feature_selection.csv
-
     deps: 
     - .\src\data\make_dataset.py 
     - .\data\processed\gurgaon_properties_post_feature_selection.csv
+
+  train_model:
+    cmd: python .\src\models\train_model.py .\data\processed\train.csv
+    deps:
+    - .\src\models\train_model.py
+    - .\data\processed\train.csv

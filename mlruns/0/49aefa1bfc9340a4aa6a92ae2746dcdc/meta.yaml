@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/49aefa1bfc9340a4aa6a92ae2746dcdc/artifacts
+end_time: 1705123273511
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 49aefa1bfc9340a4aa6a92ae2746dcdc
+run_name: upset-squid-983
+run_uuid: 49aefa1bfc9340a4aa6a92ae2746dcdc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1705123269589
+status: 3
+tags: []
+user_id: ayanp

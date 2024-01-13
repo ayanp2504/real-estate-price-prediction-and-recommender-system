@@ -210,6 +210,10 @@ def main():
     export_df = train_df.drop(columns=['pooja room', 'study room', 'others'])
     # Applying the log1p transformation to the target variable
     export_df['price']= np.log1p(train_df['price'])
+    # 0 -> unfurnished
+    # 1 -> semifurnished
+    # 2 -> furnished
+    export_df['furnishing_type'] = export_df['furnishing_type'].replace({0.0:'unfurnished',1.0:'semifurnished',2.0:'furnished'})
 
     save_data(export_df, output_path)
 

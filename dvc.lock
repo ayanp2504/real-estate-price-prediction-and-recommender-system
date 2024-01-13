@@ -96,16 +96,27 @@ stages:
       size: 415454
     - path: .\src\features\feature-selection.py
       hash: md5
-      md5: e58f025393ffbf6ad6e3a1b156c54c38
-      size: 8043
+      md5: 8e39179165f3df7500eb887e3ef4e37c
+      size: 8245
   make_dataset:
     cmd: python .\src\data\make_dataset.py .\data\processed\gurgaon_properties_post_feature_selection.csv
     deps:
     - path: .\data\processed\gurgaon_properties_post_feature_selection.csv
       hash: md5
-      md5: 9c145b0919e52dc8d075ab869ba1f91f
-      size: 352630
+      md5: 02e918739fbb62f02c8dd9023d7ad49c
+      size: 380650
     - path: .\src\data\make_dataset.py
       hash: md5
       md5: 5d87ea0853101b748b17af0be510c2ac
       size: 1314
+  train_model:
+    cmd: python .\src\models\train_model.py .\data\processed\train.csv
+    deps:
+    - path: .\data\processed\train.csv
+      hash: md5
+      md5: b987e813e38542aff642619cb3732be4
+      size: 304085
+    - path: .\src\models\train_model.py
+      hash: md5
+      md5: a108ea63ced3d2821f69817552841199
+      size: 2655
