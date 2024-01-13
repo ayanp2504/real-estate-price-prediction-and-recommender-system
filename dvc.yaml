@@ -60,3 +60,11 @@ stages:
     deps:
     - .\src\models\train_model.py
     - .\data\processed\train.csv
+
+  data_visualization:
+    cmd: python .\src\data\data_visualization.py .\data\processed\latlong.csv .\data\processed\gurgaon_properties_missing_value_imputation.csv .\data\processed\gurgaon_properties.csv
+    deps:
+    - .\src\data\data_visualization.py
+    - .\data\processed\latlong.csv
+    - .\data\processed\gurgaon_properties_missing_value_imputation.csv
+    - .\data\processed\gurgaon_properties.csv

@@ -11,7 +11,6 @@ def load_data(data_path):
     return df
 
 def save_data(data, output_path):
-    # Save the split datasets to the specified output path
     pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
     data.to_csv(output_path + '/flats_cleaned.csv', index=False)
 
