@@ -207,11 +207,10 @@ def main():
 
 
     # Features ['pooja room', 'study room', 'others'] scored the least so removing these features.
-    export_df = X_label.drop(columns=['pooja room', 'study room', 'others'])
-    export_df['price'] = y_label
+    export_df = train_df.drop(columns=['pooja room', 'study room', 'others'])
     # Applying the log1p transformation to the target variable
-    export_df['price']= np.log1p(export_df['price'])
-    print(export_df.head())
+    export_df['price']= np.log1p(train_df['price'])
+
     save_data(export_df, output_path)
 
 
