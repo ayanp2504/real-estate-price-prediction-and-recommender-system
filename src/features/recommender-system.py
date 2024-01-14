@@ -385,6 +385,10 @@ def main():
         pickle.dump(cosine_sim2, file)
 
     # Save cosine_sim3 to the specified path
+    with open(output_path + '/location_df.pkl', 'wb') as file:
+        pickle.dump(location_df, file)
+
+    # Save location_df to the specified path
     with open(output_path + '/cosine_sim3.pkl', 'wb') as file:
         pickle.dump(cosine_sim3, file)
 
