@@ -68,3 +68,9 @@ stages:
     - .\data\processed\latlong.csv
     - .\data\processed\gurgaon_properties_missing_value_imputation.csv
     - .\data\processed\gurgaon_properties.csv
+
+  recommender-system:
+    cmd: python .\src\features\recommender-system.py .\data\raw\appartments.csv
+    deps:
+    - .\src\features\recommender-system.py
+    - .\data\raw\appartments.csv

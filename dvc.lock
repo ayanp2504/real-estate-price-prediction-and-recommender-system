@@ -140,3 +140,14 @@ stages:
       hash: md5
       md5: 2eea1c9c0864e6d8820312e833688ee5
       size: 2003
+  recommender-system:
+    cmd: python .\src\features\recommender-system.py .\data\raw\appartments.csv
+    deps:
+    - path: .\data\raw\appartments.csv
+      hash: md5
+      md5: 0973dd4bd85442c26003fb77c63f3544
+      size: 272474
+    - path: .\src\features\recommender-system.py
+      hash: md5
+      md5: 8dcc53f16235e7d50ac4b33fbd0ddbcc
+      size: 15041
