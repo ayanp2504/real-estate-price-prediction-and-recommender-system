@@ -11,7 +11,7 @@ curr_dir = pathlib.Path(__file__)
 home_dir = curr_dir.parent.parent.as_posix()
 
 # Load location_df and cosine similarity matrices from pickle files
-location_df = pickle.load(open(home_dir + '/models/cosine_sim1.pkl', 'rb'))
+location_df = pickle.load(open(home_dir + '/models/location_df.pkl', 'rb'))
 cosine_sim1 = pickle.load(open(home_dir + '/models/cosine_sim1.pkl', 'rb'))
 cosine_sim2 = pickle.load(open(home_dir + '/models/cosine_sim2.pkl', 'rb'))
 cosine_sim3 = pickle.load(open(home_dir + '/models/cosine_sim3.pkl', 'rb'))

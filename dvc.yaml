@@ -74,3 +74,11 @@ stages:
     deps:
     - .\src\features\recommender-system.py
     - .\data\raw\appartments.csv
+
+  run-streamlit:
+    cmd: streamlit run Home.py 
+    deps:
+    - .\Home.py
+    - .\pages\1_Price Predictor.py
+    - .\pages\2_Analysis App.py
+    - .\pages\3_Recommend Appartments.py

@@ -151,3 +151,22 @@ stages:
       hash: md5
       md5: 8b212e268f022125df61d1c9f0c7ceb1
       size: 15174
+  run-streamlit:
+    cmd: streamlit run Home.py
+    deps:
+    - path: .\Home.py
+      hash: md5
+      md5: 723f3d9a61836ee1ad72a50f1c778cfb
+      size: 784
+    - path: .\pages\1_Price Predictor.py
+      hash: md5
+      md5: e2299e745b57cf4330aa99dea2a011fa
+      size: 2705
+    - path: .\pages\2_Analysis App.py
+      hash: md5
+      md5: acb699c16de3ae84ace9edea996e46c2
+      size: 3231
+    - path: .\pages\3_Recommend Appartments.py
+      hash: md5
+      md5: 50b7e2e1aec053f039d4d2193527cd48
+      size: 2808
