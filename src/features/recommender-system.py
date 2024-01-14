@@ -295,7 +295,7 @@ def main():
     curr_dir = pathlib.Path(__file__)
     home_dir = curr_dir.parent.parent.parent
 
-    input_file = '\\data\\raw\\appartments.csv'
+    input_file = sys.argv[1]
     data_path = home_dir.as_posix() + input_file
     df = load_data(data_path).drop(22)
 
