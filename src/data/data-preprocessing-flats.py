@@ -4,6 +4,29 @@ import sys
 import pandas as pd
 import numpy as np
 import re
+# from pydrive.auth import GoogleAuth
+# from pydrive.drive import GoogleDrive
+
+
+# def authenticate_drive():
+#     gauth = GoogleAuth()
+#     gauth.LocalWebserverAuth()  # Creates local webserver and automatically handles authentication.
+#     drive = GoogleDrive(gauth)
+#     return drive
+
+# def load_data(data_path, drive):
+#     # Load your dataset from Google Drive
+#     file_id = data_path.split('/')[-1]
+#     downloaded = drive.CreateFile({'id': file_id})
+#     downloaded.GetContentFile('data.csv')
+#     df = pd.read_csv('data.csv')
+#     return df
+
+# def save_data(data, output_path, drive):
+#     # Save data to Google Drive
+#     data.to_csv('flats_cleaned.csv', index=False)
+#     upload_file = drive.CreateFile({'title': 'flats_cleaned.csv'})
+#     upload_file.Upload()
 
 def load_data(data_path):
     # Load your dataset from a given path
@@ -82,6 +105,14 @@ def main():
     input_file = sys.argv[1]
     data_path = home_dir.as_posix() + input_file
     output_path = home_dir.as_posix() + '/data/processed'
+
+
+    # input_file = '/raw/flats.csv'
+    # gdrive_folder_id = '1j5VgVtf-JdHt8aGf-MmCtsp-VLUJbtUL'  # Replace with the actual folder ID on Google Drive
+
+    # drive = authenticate_drive()
+    # data_path = f'gdrive://{gdrive_folder_id}/{input_file}'
+    # output_path = f'gdrive://{gdrive_folder_id}/processed'
     
     data = load_data(data_path)
     data = drop_and_rename_cols(data)

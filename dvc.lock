@@ -9,8 +9,8 @@ stages:
       size: 5724107
     - path: .\src\data\data-preprocessing-flats.py
       hash: md5
-      md5: 6da08d42f5be652d46b97e3db5889610
-      size: 3223
+      md5: a1e0d27febff6b346b1c8597b7a900b8
+      size: 4349
   data-preprocessing-houses:
     cmd: python .\src\data\data-preprocessing-houses.py .\data\raw\houses.csv
     deps:
