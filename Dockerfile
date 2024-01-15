@@ -19,4 +19,5 @@ RUN pip install streamlit
 EXPOSE 8501
 
 # Run app.py when the container launches
-CMD ["streamlit", "run", "Home.py"]
+CMD ["streamlit", "run", "--server.address", "localhost", "--server.port", "8501", "Home.py"]
+
