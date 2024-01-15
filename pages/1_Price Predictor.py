@@ -11,7 +11,7 @@ curr_dir = pathlib.Path(__file__)
 home_dir = curr_dir.parent.parent.as_posix()
 
 # Load the DataFrame and pipeline model from pickle files
-df = pd.read_csv(home_dir + '\data\processed\gurgaon_properties_post_feature_selection.csv')
+df = pd.read_csv(home_dir + '/data/processed/gurgaon_properties_post_feature_selection.csv')
 
 with open(home_dir + '/models/trained_model.pkl', 'rb') as file:
     pipeline = pickle.load(file)

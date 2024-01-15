@@ -160,7 +160,7 @@ stages:
       size: 784
     - path: .\pages\1_Price Predictor.py
       hash: md5
-      md5: e2299e745b57cf4330aa99dea2a011fa
+      md5: 66619e6dc452c3a99ed5d97b61361206
       size: 2705
     - path: .\pages\2_Analysis App.py
       hash: md5
