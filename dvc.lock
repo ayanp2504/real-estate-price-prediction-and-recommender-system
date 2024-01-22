@@ -1,156 +1,89 @@
 schema: '2.0'
 stages:
   data-preprocessing-flats:
-    cmd: python .\src\data\data-preprocessing-flats.py .\data\raw\flats.csv
+    cmd: python .\src\data\data-preprocessing-flats.py
     deps:
-    - path: .\data\raw\flats.csv
-      hash: md5
-      md5: 5b4e0ed65c25b51c23850cd035f02ff9
-      size: 5724107
     - path: .\src\data\data-preprocessing-flats.py
       hash: md5
-      md5: a1e0d27febff6b346b1c8597b7a900b8
-      size: 4349
+      md5: ed320d947f75b5eceace64f201d322c2
+      size: 10497
   data-preprocessing-houses:
-    cmd: python .\src\data\data-preprocessing-houses.py .\data\raw\houses.csv
+    cmd: python .\src\data\data-preprocessing-houses.py
     deps:
-    - path: .\data\raw\houses.csv
-      hash: md5
-      md5: 4681f7c5c507e4195eeba43676843863
-      size: 2000313
     - path: .\src\data\data-preprocessing-houses.py
       hash: md5
-      md5: 674e5105b859e573c5de810f78e03ded
-      size: 3322
+      md5: 11307327020550f780846e701b22669d
+      size: 10082
   merge-flats-and-houses:
-    cmd: python .\src\data\merge-flats-and-houses.py .\data\processed\flats_cleaned.csv
-      .\data\processed\house_cleaned.csv
+    cmd: python .\src\data\merge-flats-and-houses.py
     deps:
-    - path: .\data\processed\flats_cleaned.csv
-      hash: md5
-      md5: 7fafddf7f160febbc67110cc0e66dd85
-      size: 5152858
-    - path: .\data\processed\house_cleaned.csv
-      hash: md5
-      md5: a7092f65c8c6f2aaa0c4ae88189ffc90
-      size: 1669348
     - path: .\src\data\merge-flats-and-houses.py
       hash: md5
-      md5: 24213ef7a93bc619a3bc33a120711d46
-      size: 1111
+      md5: 79cee47a3dab9d406057aa7f4f380d0f
+      size: 4764
   data-preprocessing-level-2:
-    cmd: python .\src\data\data-preprocessing-level-2.py .\data\processed\gurgaon_properties.csv
+    cmd: python .\src\data\data-preprocessing-level-2.py
     deps:
-    - path: .\data\processed\gurgaon_properties.csv
-      hash: md5
-      md5: dc3a0887d38492e4c3e01645d5c54666
-      size: 6827515
     - path: .\src\data\data-preprocessing-level-2.py
       hash: md5
-      md5: 78e6e5f055a330b0fedd45dd8798c742
-      size: 7172
+      md5: e49e51afb8cc4c4a38161c87660b97d0
+      size: 11381
   feature-engineering:
-    cmd: python .\src\features\feature-engineering.py .\data\processed\gurgaon_properties_cleaned_v1.csv
-      .\data\raw\appartments.csv
+    cmd: python .\src\features\feature-engineering.py
     deps:
-    - path: .\data\processed\gurgaon_properties_cleaned_v1.csv
-      hash: md5
-      md5: 149cdd28cbebe81a1172a4110d19a169
-      size: 3845515
-    - path: .\data\raw\appartments.csv
-      hash: md5
-      md5: 0973dd4bd85442c26003fb77c63f3544
-      size: 272474
     - path: .\src\features\feature-engineering.py
       hash: md5
-      md5: 2c646f39acb3daea61e52b3f01961e55
-      size: 12317
+      md5: 9643b47a06849d51643045e030d832ac
+      size: 17739
   outlier-treatment:
-    cmd: python .\src\features\outlier-treatment.py .\data\processed\gurgaon_properties_cleaned_v2.csv
+    cmd: python .\src\features\outlier-treatment.py
     deps:
-    - path: .\data\processed\gurgaon_properties_cleaned_v2.csv
-      hash: md5
-      md5: 43ae3f3281a66d0a62503b2a73747699
-      size: 630227
     - path: .\src\features\outlier-treatment.py
       hash: md5
-      md5: 543c56089c6d05ec472b821264549baf
-      size: 2684
+      md5: 31f567b2fdc36ca7c7bae10f726c6e20
+      size: 6225
   missing_value_imputation:
-    cmd: python .\src\features\missing-value-imputation.py .\data\processed\gurgaon_properties_outlier_treated.csv
+    cmd: python .\src\features\missing-value-imputation.py
     deps:
-    - path: .\data\processed\gurgaon_properties_outlier_treated.csv
-      hash: md5
-      md5: 67c04f30d2d9a566fda030135813afcd
-      size: 718181
     - path: .\src\features\missing-value-imputation.py
       hash: md5
-      md5: 705fe2a8d68653cfd70282bf36792cc3
-      size: 4332
+      md5: c69f4d567da3812014c1371d874ff0d7
+      size: 10507
   feature-selection:
-    cmd: python .\src\features\feature-selection.py .\data\processed\gurgaon_properties_missing_value_imputation.csv
+    cmd: python .\src\features\feature-selection.py
     deps:
-    - path: .\data\processed\gurgaon_properties_missing_value_imputation.csv
-      hash: md5
-      md5: 9acacd783bee9644373e2fc0410c96b0
-      size: 415454
     - path: .\src\features\feature-selection.py
       hash: md5
-      md5: 8e39179165f3df7500eb887e3ef4e37c
-      size: 8245
+      md5: 997778d9642b94f1d7bc2e3848fa271d
+      size: 12344
   make_dataset:
-    cmd: python .\src\data\make_dataset.py .\data\processed\gurgaon_properties_post_feature_selection.csv
+    cmd: python .\src\data\make_dataset.py
     deps:
-    - path: .\data\processed\gurgaon_properties_post_feature_selection.csv
-      hash: md5
-      md5: 02e918739fbb62f02c8dd9023d7ad49c
-      size: 380650
     - path: .\src\data\make_dataset.py
       hash: md5
-      md5: 5d87ea0853101b748b17af0be510c2ac
-      size: 1314
+      md5: 35d270e308a9d61162472cc694a4711e
+      size: 5541
   train_model:
-    cmd: python .\src\models\train_model.py .\data\processed\train.csv
+    cmd: python .\src\models\train_model.py
     deps:
-    - path: .\data\processed\train.csv
-      hash: md5
-      md5: b987e813e38542aff642619cb3732be4
-      size: 304085
     - path: .\src\models\train_model.py
       hash: md5
-      md5: a108ea63ced3d2821f69817552841199
-      size: 2655
+      md5: 296f5eec462ef885390092685b073656
+      size: 6491
   data_visualization:
-    cmd: python .\src\data\data_visualization.py .\data\processed\latlong.csv .\data\processed\gurgaon_properties_missing_value_imputation.csv
-      .\data\processed\gurgaon_properties.csv
+    cmd: python .\src\data\data_visualization.py
     deps:
-    - path: .\data\processed\gurgaon_properties.csv
-      hash: md5
-      md5: dc3a0887d38492e4c3e01645d5c54666
-      size: 6827515
-    - path: .\data\processed\gurgaon_properties_missing_value_imputation.csv
-      hash: md5
-      md5: 9acacd783bee9644373e2fc0410c96b0
-      size: 415454
-    - path: .\data\processed\latlong.csv
-      hash: md5
-      md5: a61f87c5b2212a9edd4d7fc608cd8864
-      size: 4939
     - path: .\src\data\data_visualization.py
       hash: md5
-      md5: 2eea1c9c0864e6d8820312e833688ee5
-      size: 2003
+      md5: 2238b9906107e36bf60607a57311c2ba
+      size: 7339
   recommender-system:
-    cmd: python .\src\features\recommender-system.py .\data\raw\appartments.csv
+    cmd: python .\src\features\recommender-system.py
     deps:
-    - path: .\data\raw\appartments.csv
-      hash: md5
-      md5: 0973dd4bd85442c26003fb77c63f3544
-      size: 272474
     - path: .\src\features\recommender-system.py
       hash: md5
-      md5: 8b212e268f022125df61d1c9f0c7ceb1
-      size: 15174
+      md5: 60126d33bf217f1b0606c1fd9f18c0a8
+      size: 20368
   run-streamlit:
     cmd: streamlit run Home.py
     deps:
@@ -160,12 +93,50 @@ stages:
       size: 784
     - path: .\pages\1_Price Predictor.py
       hash: md5
-      md5: 66619e6dc452c3a99ed5d97b61361206
-      size: 2705
+      md5: 7cd83c259d9d769822f883de89d10aba
+      size: 5916
     - path: .\pages\2_Analysis App.py
       hash: md5
-      md5: acb699c16de3ae84ace9edea996e46c2
-      size: 3231
+      md5: 7f9c49143d75972cabb2386ebedfa210
+      size: 6241
+    - path: .\pages\3_Recommend Appartments.py
+      hash: md5
+      md5: 50b7e2e1aec053f039d4d2193527cd48
+      size: 2808
+  streaumlit:
+    cmd: streamlit run Home.py
+    deps:
+    - path: .\Home.py
+      hash: md5
+      md5: 723f3d9a61836ee1ad72a50f1c778cfb
+      size: 784
+    - path: .\pages\1_Price Predictor.py
+      hash: md5
+      md5: 7cd83c259d9d769822f883de89d10aba
+      size: 5916
+    - path: .\pages\2_Analysis App.py
+      hash: md5
+      md5: 7f9c49143d75972cabb2386ebedfa210
+      size: 6241
+    - path: .\pages\3_Recommend Appartments.py
+      hash: md5
+      md5: 50b7e2e1aec053f039d4d2193527cd48
+      size: 2808
+  streamlit:
+    cmd: streamlit run Home.py
+    deps:
+    - path: .\Home.py
+      hash: md5
+      md5: 723f3d9a61836ee1ad72a50f1c778cfb
+      size: 784
+    - path: .\pages\1_Price Predictor.py
+      hash: md5
+      md5: 7cd83c259d9d769822f883de89d10aba
+      size: 5916
+    - path: .\pages\2_Analysis App.py
+      hash: md5
+      md5: f9fec044518cb6c86008824a2cc48be5
+      size: 6561
     - path: .\pages\3_Recommend Appartments.py
       hash: md5
       md5: 50b7e2e1aec053f039d4d2193527cd48

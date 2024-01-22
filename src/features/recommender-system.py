@@ -6,19 +6,96 @@ import re
 import json
 import ast
 import pickle
+import boto3
+import yaml
+from io import StringIO, BytesIO
 from sklearn.preprocessing import StandardScaler
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-def load_data(data_path):
-    # Load your dataset from a given path
-    df = pd.read_csv(data_path)
+# def load_data(data_path):
+#     # Load your dataset from a given path
+#     df = pd.read_csv(data_path)
+#     return df
+
+# def save_data(data, output_path):
+    # Save the split datasets to the specified output path
+    # pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
+    # data.to_csv(output_path + '/gurgaon_properties_cleaned_v2.csv', index=False)
+def load_data(bucket, key, aws_access_key_id=None, aws_secret_access_key=None, region_name=None):
+    """
+    Load dataset from an S3 bucket.
+
+    Parameters:
+    - bucket (str): S3 bucket name.
+    - key (str): S3 object key (path to the file within the bucket).
+    - aws_access_key_id (str, optional): AWS access key ID. Defaults to None.
+    - aws_secret_access_key (str, optional): AWS secret access key. Defaults to None.
+    - region_name (str, optional): AWS region name. Defaults to None.
+
+    Returns:
+    - pd.DataFrame: Loaded DataFrame from the S3 object.
+    """
+    # Initialize S3 client
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
+    
+    # Get S3 object
+    obj = s3.get_object(Bucket=bucket, Key=key)
+    
+    # Read CSV data from S3 object's body
+    df = pd.read_csv(obj['Body'])
+    
     return df
 
-def save_data(data, output_path):
-    # Save the split datasets to the specified output path
-    pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
-    data.to_csv(output_path + '/gurgaon_properties_cleaned_v2.csv', index=False)
+
+def save_data(data, bucket, key, aws_access_key_id=None, aws_secret_access_key=None, region_name=None):
+    """
+    Save dataset to an S3 bucket.
+
+    Parameters:
+    - data (pd.DataFrame): DataFrame to be saved.
+    - bucket (str): S3 bucket name.
+    - key (str): S3 object key (path to the file within the bucket).
+    - aws_access_key_id (str, optional): AWS access key ID. Defaults to None.
+    - aws_secret_access_key (str, optional): AWS secret access key. Defaults to None.
+    - region_name (str, optional): AWS region name. Defaults to None.
+
+    Returns:
+    - None
+    """
+    # Initialize S3 client
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
+    
+    # Convert DataFrame to CSV format in memory
+    csv_buffer = StringIO()
+    data.to_csv(csv_buffer, index=False)
+    
+    # Upload CSV data to S3 object
+    s3.put_object(Bucket=bucket, Key=key, Body=csv_buffer.getvalue())
+
+def save_pickled_model(model, bucket, key, aws_access_key_id=None, aws_secret_access_key=None, region_name=None):
+    """
+    Save a pickled model to an S3 bucket.
+
+    Parameters:
+    - model: The model or data to be pickled and saved.
+    - bucket (str): S3 bucket name.
+    - key (str): S3 object key (path to the file within the bucket).
+    - aws_access_key_id (str, optional): AWS access key ID. Defaults to None.
+    - aws_secret_access_key (str, optional): AWS secret access key. Defaults to None.
+    - region_name (str, optional): AWS region name. Defaults to None.
+
+    Returns:
+    - None
+    """
+    # Initialize S3 client
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
+
+    # Pickle the model into bytes
+    pickled_model = pickle.dumps(model)
+
+    # Upload pickled model to S3 object
+    s3.put_object(Bucket=bucket, Key=key, Body=BytesIO(pickled_model).read())
 
 def extract_list(s):
     """
@@ -295,9 +372,35 @@ def main():
     curr_dir = pathlib.Path(__file__)
     home_dir = curr_dir.parent.parent.parent
 
-    input_file = sys.argv[1]
-    data_path = home_dir.as_posix() + input_file
-    df = load_data(data_path).drop(22)
+    # input_file = sys.argv[1]
+    # data_path = home_dir.as_posix() + input_file
+    # df = load_data(data_path).drop(22)
+    # Define the path to the 'params.yaml' file within the home directory
+    params_file = home_dir.as_posix() + '/params.yaml'
+
+    # Load S3 parameters from 'params.yaml'
+    s3_params = yaml.safe_load(open(params_file))["s3"]
+
+    # Load file-specific parameters for 'data-preprocessing-flats' from 'params.yaml'
+    file_params = yaml.safe_load(open(params_file))["recommender-system"]
+
+     # Extract S3 parameters from the loaded 's3_params'
+    s3_bucket = s3_params['bucket']
+    s3_key = file_params['input_data']
+    output_s3_key1 = file_params['cosine_sim1_model']
+    output_s3_key2 = file_params['cosine_sim2_model']
+    output_s3_key3 = file_params['cosine_sim3_model']
+    output_s3_key4 = file_params['location_dataframe']
+    aws_access_key_id = s3_params['aws_access_key_id']
+    aws_secret_access_key = s3_params['aws_secret_access_key']
+    region_name = s3_params['region_name']
+    df = load_data(bucket=s3_bucket,
+                     key=s3_key,
+                     aws_access_key_id=aws_access_key_id,
+                     aws_secret_access_key=aws_secret_access_key,
+                     region_name=region_name)
+    
+    df = df.drop(22)
 
     # Apply the extract_list function to the 'TopFacilities' column
     df['TopFacilities'] = df['TopFacilities'].apply(extract_list)
@@ -376,21 +479,46 @@ def main():
 
     output_path = home_dir.as_posix() + '/models'
 
-    # Save cosine_sim1 to the specified path
-    with open(output_path + '/cosine_sim1.pkl', 'wb') as file:
-        pickle.dump(cosine_sim1, file)
+    # # Save cosine_sim1 to the specified path
+    # with open(output_path + '/cosine_sim1.pkl', 'wb') as file:
+    #     pickle.dump(cosine_sim1, file)
 
-    # Save cosine_sim2 to the specified path
-    with open(output_path + '/cosine_sim2.pkl', 'wb') as file:
-        pickle.dump(cosine_sim2, file)
+    # # Save cosine_sim2 to the specified path
+    # with open(output_path + '/cosine_sim2.pkl', 'wb') as file:
+    #     pickle.dump(cosine_sim2, file)
 
-    # Save cosine_sim3 to the specified path
-    with open(output_path + '/location_df.pkl', 'wb') as file:
-        pickle.dump(location_df, file)
+    # # Save cosine_sim3 to the specified path
+    # with open(output_path + '/location_df.pkl', 'wb') as file:
+    #     pickle.dump(location_df, file)
 
-    # Save location_df to the specified path
-    with open(output_path + '/cosine_sim3.pkl', 'wb') as file:
-        pickle.dump(cosine_sim3, file)
+    # # Save location_df to the specified path
+    # with open(output_path + '/cosine_sim3.pkl', 'wb') as file:
+    #     pickle.dump(cosine_sim3, file)
+
+    save_pickled_model(model=cosine_sim1,
+            bucket=s3_bucket,
+            key=output_s3_key1,
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            region_name=region_name)
+    save_pickled_model(model=cosine_sim2,
+        bucket=s3_bucket,
+        key=output_s3_key2,
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        region_name=region_name)    
+    save_pickled_model(model=cosine_sim3,
+        bucket=s3_bucket,
+        key=output_s3_key3,
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        region_name=region_name)  
+    save_pickled_model(model=location_df,
+        bucket=s3_bucket,
+        key=output_s3_key3,
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        region_name=region_name)  
 
 
 if __name__ == "__main__":

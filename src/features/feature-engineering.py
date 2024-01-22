@@ -1,41 +1,121 @@
-# data-preprocessing-flats.py
+# feature-engineering.py
 import pathlib
 import sys
 import re
 import ast
 import pandas as pd
 import numpy as np
+import boto3
+import yaml
+from io import StringIO
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MultiLabelBinarizer
 
 
-def load_data(data_path):
-    # Load your dataset from a given path
-    df = pd.read_csv(data_path)
+# def load_data(data_path):
+#     # Load your dataset from a given path
+#     df = pd.read_csv(data_path)
+#     return df
+
+# def save_data(data, output_path):
+#     # Save the split datasets to the specified output path
+#     pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
+#     data.to_csv(output_path + '/gurgaon_properties_cleaned_v2.csv', index=False)
+
+def load_data(bucket, key, aws_access_key_id=None, aws_secret_access_key=None, region_name=None):
+    """
+    Load dataset from an S3 bucket.
+
+    Parameters:
+    - bucket (str): S3 bucket name.
+    - key (str): S3 object key (path to the file within the bucket).
+    - aws_access_key_id (str, optional): AWS access key ID. Defaults to None.
+    - aws_secret_access_key (str, optional): AWS secret access key. Defaults to None.
+    - region_name (str, optional): AWS region name. Defaults to None.
+
+    Returns:
+    - pd.DataFrame: Loaded DataFrame from the S3 object.
+    """
+    # Initialize S3 client
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
+    
+    # Get S3 object
+    obj = s3.get_object(Bucket=bucket, Key=key)
+    
+    # Read CSV data from S3 object's body
+    df = pd.read_csv(obj['Body'])
+    
     return df
 
-def save_data(data, output_path):
-    # Save the split datasets to the specified output path
-    pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
-    data.to_csv(output_path + '/gurgaon_properties_cleaned_v2.csv', index=False)
 
-# This function extracts the Super Built up area
+def save_data(data, bucket, key, aws_access_key_id=None, aws_secret_access_key=None, region_name=None):
+    """
+    Save dataset to an S3 bucket.
+
+    Parameters:
+    - data (pd.DataFrame): DataFrame to be saved.
+    - bucket (str): S3 bucket name.
+    - key (str): S3 object key (path to the file within the bucket).
+    - aws_access_key_id (str, optional): AWS access key ID. Defaults to None.
+    - aws_secret_access_key (str, optional): AWS secret access key. Defaults to None.
+    - region_name (str, optional): AWS region name. Defaults to None.
+
+    Returns:
+    - None
+    """
+    # Initialize S3 client
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
+    
+    # Convert DataFrame to CSV format in memory
+    csv_buffer = StringIO()
+    data.to_csv(csv_buffer, index=False)
+    
+    # Upload CSV data to S3 object
+    s3.put_object(Bucket=bucket, Key=key, Body=csv_buffer.getvalue())
+
 def get_super_built_up_area(text):
+    """
+    Extract the Super Built up area from the given text.
+
+    Parameters:
+    - text (str): Input text containing information about Super Built up area.
+
+    Returns:
+    - float or None: Extracted Super Built up area if found, else None.
+    """
     match = re.search(r'Super Built up area (\d+\.?\d*)', text)
     if match:
         return float(match.group(1))
     return None
 
-# This function extracts the Built Up area or Carpet area
 def get_area(text, area_type):
+    """
+    Extract the area of a specific type from the given text.
+
+    Parameters:
+    - text (str): Input text containing information about the area.
+    - area_type (str): Type of area to extract.
+
+    Returns:
+    - float or None: Extracted area of the specified type if found, else None.
+    """
     match = re.search(area_type + r'\s*:\s*(\d+\.?\d*)', text)
     if match:
         return float(match.group(1))
     return None
 
-# This function checks if the area is provided in sq.m. and converts it to sqft if needed
 def convert_to_sqft(text, area_value):
+    """
+    Convert the area value to square feet if the conversion information is available in the text.
+
+    Parameters:
+    - text (str): Input text containing information about the area.
+    - area_value: Area value to convert.
+
+    Returns:
+    - float or None: Converted area in square feet if conversion information is found, else the original area value.
+    """
     if area_value is None:
         return None
     match = re.search(r'{} \((\d+\.?\d*) sq.m.\)'.format(area_value), text)
@@ -44,23 +124,50 @@ def convert_to_sqft(text, area_value):
         return sq_m_value * 10.7639  # conversion factor from sq.m. to sqft
     return area_value
 
-# Function to extract plot area from 'areaWithType' column
 def extract_plot_area(area_with_type):
+    """
+    Extract plot area value from the given text.
+
+    Parameters:
+    - area_with_type (str): Text containing information about the plot area.
+
+    Returns:
+    - float or None: Extracted plot area value if found, else None.
+    """
     match = re.search(r'Plot area (\d+\.?\d*)', area_with_type)
     return float(match.group(1)) if match else None
 
 def convert_scale(row):
+    """
+    Convert the scale of built-up area based on the relationship with the total area.
+
+    Parameters:
+    - row (pd.Series): Row containing 'area' and 'built_up_area' columns.
+
+    Returns:
+    - float: Adjusted built-up area value.
+    """
     if np.isnan(row['area']) or np.isnan(row['built_up_area']):
         return row['built_up_area']
     else:
-        if round(row['area']/row['built_up_area']) == 9.0:
+        if round(row['area'] / row['built_up_area']) == 9.0:
             return row['built_up_area'] * 9
-        elif round(row['area']/row['built_up_area']) == 11.0:
+        elif round(row['area'] / row['built_up_area']) == 11.0:
             return row['built_up_area'] * 10.7
         else:
             return row['built_up_area']
+
         
 def categorize_age_possession(value):
+    """
+    Categorize the age or possession status of a property.
+
+    Parameters:
+    - value (str): Input value describing age or possession.
+
+    Returns:
+    - str: Categorized label.
+    """
     if pd.isna(value):
         return "Undefined"
     if "0 to 1 Year Old" in value or "Within 6 months" in value or "Within 3 months" in value:
@@ -79,9 +186,19 @@ def categorize_age_possession(value):
         return "Under Construction"
     except:
         return "Undefined"
+
     
-# Define a function to extract the count of a furnishing from the furnishDetails
 def get_furnishing_count(details, furnishing):
+    """
+    Extract the count of a specific furnishing type from the property details.
+
+    Parameters:
+    - details (str): Property details.
+    - furnishing (str): Furnishing type.
+
+    Returns:
+    - int: Count of the specified furnishing type.
+    """
     if isinstance(details, str):
         if f"No {furnishing}" in details:
             return 0
@@ -93,21 +210,55 @@ def get_furnishing_count(details, furnishing):
             return 1
     return 0
 
+
 def main():
 
+    # Get the current directory path
     curr_dir = pathlib.Path(__file__)
+
+    # Navigate up three levels to reach the parent directory
     home_dir = curr_dir.parent.parent.parent
 
-    input_file = sys.argv[1]
-    data_path = home_dir.as_posix() + input_file
+    # Define the path to the 'params.yaml' file within the home directory
+    params_file = home_dir.as_posix() + '/params.yaml'
 
-    apart_input_file = sys.argv[2]
-    apart_data_path = home_dir.as_posix() + apart_input_file
+    # Load S3 parameters from 'params.yaml'
+    s3_params = yaml.safe_load(open(params_file))["s3"]
 
-    output_path = home_dir.as_posix() + '/data/processed'
+    # Load file-specific parameters for 'data-preprocessing-flats' from 'params.yaml'
+    file_params = yaml.safe_load(open(params_file))["feature-engineering"]
+
+    # Extract S3 parameters from the loaded 's3_params'
+    s3_bucket = s3_params['bucket']
+    s3_key1 = file_params['input_data1']
+    s3_key2 = file_params['input_data2']
+    output_s3_key = file_params['output_data']
+    aws_access_key_id = s3_params['aws_access_key_id']
+    aws_secret_access_key = s3_params['aws_secret_access_key']
+    region_name = s3_params['region_name']
+
+    # Load data from S3 using specified parameters
+    df = load_data(bucket=s3_bucket,
+                     key=s3_key1,
+                     aws_access_key_id=aws_access_key_id,
+                     aws_secret_access_key=aws_secret_access_key,
+                     region_name=region_name)
+
+
+    # curr_dir = pathlib.Path(__file__)
+    # home_dir = curr_dir.parent.parent.parent
+
+    # input_file = sys.argv[1]
+    # data_path = home_dir.as_posix() + input_file
+
+    # apart_input_file = sys.argv[2]
+    # apart_data_path = home_dir.as_posix() + apart_input_file
+
+    # output_path = home_dir.as_posix() + '/data/processed'
     
-    df = load_data(data_path)
-        # Extract Super Built up area and convert to sqft if needed
+    # df = load_data(data_path)
+
+    # Extract Super Built up area and convert to sqft if needed
     df['super_built_up_area'] = df['areaWithType'].apply(get_super_built_up_area)
     df['super_built_up_area'] = df.apply(lambda x: convert_to_sqft(x['areaWithType'], x['super_built_up_area']), axis=1)
 
@@ -189,7 +340,13 @@ def main():
 
 
     ############# features ##########
-    app_df  = load_data(apart_data_path)
+
+    app_df = load_data(bucket=s3_bucket,
+                     key=s3_key2,
+                     aws_access_key_id=aws_access_key_id,
+                     aws_secret_access_key=aws_secret_access_key,
+                     region_name=region_name)
+    # app_df  = load_data(apart_data_path)
     app_df['PropertyName'] = app_df['PropertyName'].str.lower()
     temp_df = df[df['features'].isnull()]
     x = temp_df.merge(app_df,left_on='society',right_on='PropertyName',how='left')['TopFacilities']
@@ -330,7 +487,13 @@ def main():
     # cols to drop -> nearbyLocations,furnishDetails, features,features_list, additionalRoom
     df.drop(columns=['nearbyLocations','furnishDetails','features','features_list','additionalRoom'],inplace=True)
 
-    save_data(df, output_path)
+    # Save the processed data back to S3
+    save_data(data=df,
+              bucket=s3_bucket,
+              key=output_s3_key,
+              aws_access_key_id=aws_access_key_id,
+              aws_secret_access_key=aws_secret_access_key,
+              region_name=region_name)
 
 
 

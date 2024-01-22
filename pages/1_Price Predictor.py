@@ -3,18 +3,106 @@ import pickle
 import pandas as pd
 import numpy as np
 import pathlib
+import boto3
+import yaml
+from io import StringIO
+
+def load_data(bucket, key, aws_access_key_id=None, aws_secret_access_key=None, region_name=None):
+    """
+    Load dataset from an S3 bucket.
+
+    Parameters:
+    - bucket (str): S3 bucket name.
+    - key (str): S3 object key (path to the file within the bucket).
+    - aws_access_key_id (str, optional): AWS access key ID. Defaults to None.
+    - aws_secret_access_key (str, optional): AWS secret access key. Defaults to None.
+    - region_name (str, optional): AWS region name. Defaults to None.
+
+    Returns:
+    - pd.DataFrame: Loaded DataFrame from the S3 object.
+    """
+    # Initialize S3 client
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
+    
+    # Get S3 object
+    obj = s3.get_object(Bucket=bucket, Key=key)
+    
+    # Read CSV data from S3 object's body
+    df = pd.read_csv(obj['Body'])
+    
+    return df
+
+def load_pickled_model(bucket, key, aws_access_key_id=None, aws_secret_access_key=None, region_name=None):
+    """
+    Load a pickled model from an S3 bucket.
+
+    Parameters:
+    - bucket (str): S3 bucket name.
+    - key (str): S3 object key (path to the file within the bucket).
+    - aws_access_key_id (str, optional): AWS access key ID. Defaults to None.
+    - aws_secret_access_key (str, optional): AWS secret access key. Defaults to None.
+    - region_name (str, optional): AWS region name. Defaults to None.
+
+    Returns:
+    - Loaded pickled model or data
+    """
+    # Initialize S3 client
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
+
+    # Download pickled model from S3
+    response = s3.get_object(Bucket=bucket, Key=key)
+    pickled_model = response['Body'].read()
+
+    # Load pickled model
+    loaded_model = pickle.loads(pickled_model)
+
+    return loaded_model
 
 # Set Streamlit page configuration
 st.set_page_config(page_title="Price Predictor")
 
+# Get the current directory path
 curr_dir = pathlib.Path(__file__)
-home_dir = curr_dir.parent.parent.as_posix()
 
-# Load the DataFrame and pipeline model from pickle files
-df = pd.read_csv(home_dir + '/data/processed/gurgaon_properties_post_feature_selection.csv')
+# Navigate up three levels to reach the parent directory
+home_dir = curr_dir.parent.parent
 
-with open(home_dir + '/models/trained_model.pkl', 'rb') as file:
-    pipeline = pickle.load(file)
+# Define the path to the 'params.yaml' file within the home directory
+params_file = home_dir.as_posix() + '/params.yaml'
+
+# Load S3 parameters from 'params.yaml'
+s3_params = yaml.safe_load(open(params_file))["s3"]
+
+# Load file-specific parameters for 'data-preprocessing-flats' from 'params.yaml'
+file_params = yaml.safe_load(open(params_file))["run-streamlit"]
+
+# Extract S3 parameters from the loaded 's3_params'
+s3_bucket = s3_params['bucket']
+s3_key = file_params['price_predictor_data']
+model_s3_key = file_params['train_model']
+aws_access_key_id = s3_params['aws_access_key_id']
+aws_secret_access_key = s3_params['aws_secret_access_key']
+region_name = s3_params['region_name']
+
+# # Load the DataFrame and pipeline model from pickle files
+# df = pd.read_csv(home_dir + '/data/processed/gurgaon_properties_post_feature_selection.csv')
+
+# Load data from S3 using specified parameters
+df = load_data(bucket=s3_bucket,
+                    key=s3_key,
+                    aws_access_key_id=aws_access_key_id,
+                    aws_secret_access_key=aws_secret_access_key,
+                    region_name=region_name)
+
+# with open(home_dir + '/models/trained_model.pkl', 'rb') as file:
+#     pipeline = pickle.load(file)
+
+# Load the saved model
+pipeline = load_pickled_model(bucket=s3_bucket,
+        key=model_s3_key,
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        region_name=region_name)
 
 # Streamlit app header
 st.header('Enter your inputs')

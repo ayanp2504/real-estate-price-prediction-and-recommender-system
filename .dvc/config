@@ -1,6 +1,2 @@
-[core]
-    remote = gdrivestorage
 ['remote "remote"']
     url = C:\Remote_storage
-['remote "gdrivestorage"']
-    url = gdrive://1j5VgVtf-JdHt8aGf-MmCtsp-VLUJbtUL
