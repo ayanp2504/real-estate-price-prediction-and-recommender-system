@@ -45,4 +45,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true  # Push the Docker image
-          tags: ayanp2504/your_image_name:latest# Specify the Docker image tags
+          tags:  ${{ secrets.DOCKERHUB_USERNAME }}/real-estate:latest # Specify the Docker image tags
