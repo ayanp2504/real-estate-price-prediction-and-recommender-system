@@ -5,8 +5,8 @@ FROM python:3.10
 WORKDIR /app
 
 # Copy only the required folders and files relative to the Dockerfile
-COPY data /app/data/
-COPY models /app/models/
+# COPY data /app/data/
+# COPY models /app/models/
 COPY pages /app/pages/
 COPY docker-requirements.txt /app/
 COPY Home.py /app/
