@@ -1,48 +1,62 @@
-name: CI Pipeline  # Define the name of the GitHub Actions workflow
+name: CI Pipeline
 
 on:
   push:
-    branches:
-      - master  # Trigger the workflow on pushes to the master branch
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
-  build:  # Define a job named 'build' for installing Python
-    name: Install Python  # Specify a name for the job
-    runs-on: ubuntu-latest  # Use the latest version of Ubuntu as the runner
-
+  integration:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository  # Checkout the repository's code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Set up Python  # Set up Python on the runner
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"  # Specify the Python version
+      - name: Lint code
+        run: echo "Linting repository"
 
-    - name: Install Dependencies  # Install project dependencies
-      run: |
-        python -m pip install --upgrade pip
+      - name: Run unit tests
+        run: echo "Running unit tests"
 
-  docker:  # Define a job named 'docker' for building and pushing Docker images
-    name: Build and push Docker images  # Specify a name for the job
-    needs: build  # Depend on the completion of the 'build' job
-    runs-on: ubuntu-latest  # Use the latest version of Ubuntu as the runner
-
+  build-and-push-ecr-image:
+    name: Push to ECR
+    needs: integration
+    runs-on: ubuntu-latest
     steps:
-      - name: Set up QEMU  # Set up QEMU for cross-platform builds
-        uses: docker/setup-qemu-action@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx  # Set up Docker Buildx for multi-platform builds
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub  # Log in to Docker Hub with credentials
-        uses: docker/login-action@v3
+      - name: Install Utilities
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq unzip
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}  # Use Docker Hub username from secrets
-          password: ${{ secrets.DOCKER_PASSWORD }}  # Use Docker Hub password from secrets
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Build and push  # Build and push Docker images
-        uses: docker/build-push-action@v5
-        with:
-          push: true  # Push the Docker image
-          tags: ayanp2504/your_image_name:latest # Specify the Docker image tags
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          IMAGE_TAG: latest
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

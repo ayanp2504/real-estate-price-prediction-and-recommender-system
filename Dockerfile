@@ -10,14 +10,13 @@ WORKDIR /app
 COPY pages /app/pages/
 COPY docker-requirements.txt /app/
 COPY Home.py /app/
+COPY params.yaml /app/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r docker-requirements.txt
-RUN pip install streamlit
 
-# Expose the port the app runs on
-EXPOSE 8501
+
 
 # Run app.py when the container launches
-CMD ["streamlit", "run", "--server.address", "localhost", "--server.port", "8501", "Home.py"]
+CMD ["streamlit", "run", "Home.py"]
 
