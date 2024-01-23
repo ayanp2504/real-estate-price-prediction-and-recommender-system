@@ -17,19 +17,51 @@ jobs:
       - name: Run unit tests
         run: echo "Running unit tests"
 
-  build-and-push-ecr-image:
-    name: Push to ECR
-    needs: integration
-    runs-on: ubuntu-latest
+  # build-and-push-ecr-image:
+  #   name: Push to ECR
+  #   needs: integration
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
+
+  #     - name: Install Utilities
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get install -y jq unzip
+
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: us-east-1
+
+  #     - name: Login to Amazon ECR Public
+  #       id: login-ecr-public
+  #       uses: aws-actions/amazon-ecr-login@v2
+  #       with:
+  #         registry-type: public
+
+  #     - name: Build, tag, and push docker image to Amazon ECR Public
+  #       env:
+  #         REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+  #         REGISTRY_ALIAS: ${{ secrets.AWS_ECR_REGISTRY_ALIAS }} # Correct this to your ECR Public registry alias
+  #         REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
+  #         IMAGE_TAG: latest
+  #       run: |
+  #         echo "REGISTRY: $REGISTRY"
+  #         echo "REGISTRY_ALIAS: $REGISTRY_ALIAS"
+  #         echo "REPOSITORY: $REPOSITORY"
+  #         echo "IMAGE_TAG: $IMAGE_TAG"
+  #         docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
+  #         docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+
+  continuous-deployment:
+    name: Continuous Deployment
+    runs-on: self-hosted  # Assuming you have a self-hosted runner
+    # needs: build-and-push-ecr-image
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Install Utilities
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq unzip
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -37,22 +69,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Login to Amazon ECR Public
-        id: login-ecr-public
-        uses: aws-actions/amazon-ecr-login@v2
-        with:
-          registry-type: public
-
-      - name: Build, tag, and push docker image to Amazon ECR Public
+      - name: Pull latest images from ECR Public
         env:
-          REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-          REGISTRY_ALIAS: ${{ secrets.AWS_ECR_REGISTRY_ALIAS }} # Correct this to your ECR Public registry alias
-          REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
+          ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_ALIAS }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
           IMAGE_TAG: latest
         run: |
-          echo "REGISTRY: $REGISTRY"
-          echo "REGISTRY_ALIAS: $REGISTRY_ALIAS"
-          echo "REPOSITORY: $REPOSITORY"
-          echo "IMAGE_TAG: $IMAGE_TAG"
-          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+          docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Delete Previous Container
+        run: |
+          docker rm -f creditcard || true
+
+      - name: Run Docker Image to serve users
+        run: |
+          docker run -d -p 8080:8080 --ipc="host" --name=creditcard $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
