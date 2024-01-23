@@ -83,4 +83,4 @@ jobs:
 
       - name: Run Docker Image to serve users
         run: |
-          docker run -d -p 8051:8051 --ipc="host" --name=real-estate $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker run -d -p 8051:8051 --ipc="host" --name=real-estate public.ecr.aws/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
