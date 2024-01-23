@@ -75,12 +75,12 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
           IMAGE_TAG: latest
         run: |
-          docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker pull public.ecr.aws/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Delete Previous Container
         run: |
-          docker rm -f creditcard || true
+          docker rm -f real-estate || true
 
       - name: Run Docker Image to serve users
         run: |
-          docker run -d -p 8080:8080 --ipc="host" --name=creditcard $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker run -d -p 8080:8080 --ipc="host" --name=real-estate $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
